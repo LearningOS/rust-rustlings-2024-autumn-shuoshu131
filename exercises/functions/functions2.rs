@@ -5,7 +5,7 @@
 
 
 fn main() {
-    call_me(3);
+    call_me(3); // 传入参数 i32
 }
 
 fn call_me(num: i32) {

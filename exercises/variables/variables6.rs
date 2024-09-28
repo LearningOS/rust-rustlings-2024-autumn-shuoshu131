@@ -4,7 +4,7 @@
 // hint.
 
 
-const NUMBER: i32 = 3;
+const NUMBER: i32 = 3; // 定义一个常量
 fn main() {
     println!("Number {}", NUMBER);
 }

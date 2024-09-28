@@ -5,7 +5,7 @@
 
 
 fn main() {
-    let mut x = 3;
+    let mut x = 3; // 声明变量可变而非不可变
     println!("Number {}", x);
     x = 5; // don't change this line
     println!("Number {}", x);

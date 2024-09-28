@@ -6,5 +6,5 @@
 
 fn main() {
     let x: i32 = 10;
-    println!("Number {}", x);
+    println!("Number {}", x); // {} 是占位符
 }
