@@ -3,9 +3,11 @@
 	This problem requires you to implement a basic interface for a binary tree
 */
 
-//I AM NOT DONE
+
 use std::cmp::Ordering;
 use std::fmt::Debug;
+
+use std::fmt::Display;
 
 
 #[derive(Debug)]
@@ -41,7 +43,7 @@ where
 
 impl<T> BinarySearchTree<T>
 where
-    T: Ord,
+    T: Ord + Display,
 {
 
     fn new() -> Self {
@@ -51,22 +53,64 @@ where
     // Insert a value into the BST
     fn insert(&mut self, value: T) {
         //TODO
+        match self.root {
+            Some(ref mut root) => {
+                root.insert(value);
+            },
+            None => {
+                self.root = Some(Box::new(TreeNode::new(value)));
+            }
+        }
     }
 
     // Search for a value in the BST
     fn search(&self, value: T) -> bool {
         //TODO
-        true
+        let mut current_node = &self.root;
+        while let Some(ref node) = current_node {
+            if value == node.value {
+                return true;
+            } else if value < node.value {
+                current_node = &node.left;
+            } else {
+                current_node = &node.right;
+            }
+        }
+        false
     }
 }
 
 impl<T> TreeNode<T>
 where
-    T: Ord,
+    T: Ord + Display,
 {
     // Insert a node into the tree
     fn insert(&mut self, value: T) {
         //TODO
+        if value < self.value {
+            // 分配左子树
+            match self.left {
+                Some(ref mut left_node) => {
+                    left_node.insert(value);
+                },
+                None => {
+                    // println!("insert left{}", value);
+                    self.left = Some(Box::new(TreeNode::new(value)));
+                }
+            }
+        }
+        else if value > self.value {
+            // 分配右子树
+            match self.right {
+                Some(ref mut right_node) => {
+                    right_node.insert(value);
+                },
+                None => {
+                    // println!("insert right{}", value);
+                    self.right = Some(Box::new(TreeNode::new(value)));
+                }
+            }
+        }
     }
 }
 
