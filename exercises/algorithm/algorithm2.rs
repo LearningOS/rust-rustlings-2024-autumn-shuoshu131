@@ -61,7 +61,7 @@ impl<T> LinkedList<T> {
 
     pub fn get(&mut self, index: i32) -> Option<&T> {
         self.get_ith_node(self.start, index)
-    }
+    } // 查找第index个节点
 
     fn get_ith_node(&mut self, node: Option<NonNull<Node<T>>>, index: i32) -> Option<&T> {
         match node {
@@ -71,9 +71,27 @@ impl<T> LinkedList<T> {
                 _ => self.get_ith_node(unsafe { (*next_ptr.as_ptr()).next }, index - 1),
             },
         }
+    } // 查找节点后第index个节点
+
+    /*反向一个双向链表 */
+    /*
+    struct LinkedList<T> {
+        length: u32,
+        start: Option<NonNull<Node<T>>>,
+        end: Option<NonNull<Node<T>>>,
     }
+
+    struct LinkedList<T> {
+        length: u32,
+        start: Option<NonNull<Node<T>>>,
+        end: Option<NonNull<Node<T>>>,
+    }
+     */
 	pub fn reverse(&mut self){
 		// TODO
+        let temple = self.start;
+        self.start = self.end;
+        self.end = temple;
 	}
 }
 

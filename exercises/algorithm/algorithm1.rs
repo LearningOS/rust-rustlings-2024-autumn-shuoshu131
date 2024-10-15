@@ -2,7 +2,7 @@
 	single linked list merge
 	This problem requires you to merge two ordered singly linked lists into one ordered singly linked list
 */
-// I AM NOT DONE
+
 
 use std::fmt::{self, Display, Formatter};
 use std::ptr::NonNull;
@@ -14,7 +14,7 @@ struct Node<T> {
     next: Option<NonNull<Node<T>>>,
 }
 
-impl<T> Node<T> {
+impl<T: PartialOrd + Clone> Node<T> {
     fn new(t: T) -> Node<T> {
         Node {
             val: t,
@@ -27,22 +27,22 @@ struct LinkedList<T> {
     length: u32,
     start: Option<NonNull<Node<T>>>,
     end: Option<NonNull<Node<T>>>,
-}
+} // 定义链表节点
 
-impl<T> Default for LinkedList<T> {
+impl<T: PartialOrd + Clone> Default for LinkedList<T> {
     fn default() -> Self {
         Self::new()
     }
 }
 
-impl<T> LinkedList<T> {
+impl<T: PartialOrd + Clone> LinkedList<T> {
     pub fn new() -> Self {
         Self {
             length: 0,
             start: None,
             end: None,
         }
-    }
+    } // 初始化链表
 
     pub fn add(&mut self, obj: T) {
         let mut node = Box::new(Node::new(obj));
@@ -54,13 +54,13 @@ impl<T> LinkedList<T> {
         }
         self.end = node_ptr;
         self.length += 1;
-    }
+    } // 增
 
-    pub fn get(&mut self, index: i32) -> Option<&T> {
+    pub fn get(&self, index: i32) -> Option<&T> {
         self.get_ith_node(self.start, index)
-    }
+    } // 查找第index个节点
 
-    fn get_ith_node(&mut self, node: Option<NonNull<Node<T>>>, index: i32) -> Option<&T> {
+    fn get_ith_node(&self, node: Option<NonNull<Node<T>>>, index: i32) -> Option<&T> {
         match node {
             None => None,
             Some(next_ptr) => match index {
@@ -68,16 +68,53 @@ impl<T> LinkedList<T> {
                 _ => self.get_ith_node(unsafe { (*next_ptr.as_ptr()).next }, index - 1),
             },
         }
+    } // 查找特定节点后第index个节点
+    /*
+    struct LinkedList<T> {
+        length: u32,
+        start: Option<NonNull<Node<T>>>,
+        end: Option<NonNull<Node<T>>>,
+    } 
+
+    struct Node<T> {
+        val: T,
+        next: Option<NonNull<Node<T>>>,
     }
+    */
 	pub fn merge(list_a:LinkedList<T>,list_b:LinkedList<T>) -> Self
 	{
 		//TODO
-		Self {
-            length: 0,
-            start: None,
-            end: None,
+		let mut list_c:LinkedList<T> = LinkedList { length: (0), start: (None), end: (None) };
+        let mut index_a:i32 = 0;
+        let mut index_b:i32 = 0;
+        
+        while(index_a+index_b) < (list_a.length+list_b.length).try_into().unwrap() {
+            let node_a = list_a.get(index_a).clone();
+            let node_b = list_b.get(index_b).clone();
+            match (node_a,node_b) {
+                (Some(va),Some(vb)) => {
+                    if *va >= *vb {
+                        list_c.add(vb.clone());
+                        index_b +=1;
+                    }
+                    else {
+                        list_c.add(va.clone());
+                        index_a +=1;
+                    }
+                },
+                (Some(va), None) => {
+                    list_c.add(va.clone());
+                    index_a +=1;
+                },
+                (None, Some(vb)) => {
+                    list_c.add(vb.clone());
+                    index_b +=1;
+                },
+                (None, None) => break,
+            }
         }
-	}
+        list_c
+	} // 合并两个链表，从小到大
 }
 
 impl<T> Display for LinkedList<T>
@@ -89,7 +126,7 @@ where
             Some(node) => write!(f, "{}", unsafe { node.as_ref() }),
             None => Ok(()),
         }
-    }
+    } // 打印链表
 }
 
 impl<T> Display for Node<T>
@@ -101,7 +138,7 @@ where
             Some(node) => write!(f, "{}, {}", self.val, unsafe { node.as_ref() }),
             None => write!(f, "{}", self.val),
         }
-    }
+    } // 打印节点
 }
 
 #[cfg(test)]
